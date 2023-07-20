@@ -21,5 +21,7 @@
     **Summary**
     •	Postman is used to automate the endpoints and validations. Please note a few scenarios/validations are covered as part of this exercise.
     •	“QA_Excercise” workspace is created with “Ensek” collection to cater “Buy more fuel” endpoints 
-    •	Collection and Global Variables are exported and placed in GITHUB
+    •	Collection and Global Variables files are exported and placed in GITHUB
+        - Ensek.postman_collection
+        - workspace.postman_globals
 
