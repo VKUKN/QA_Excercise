@@ -1,0 +1,729 @@
+{
+	"info": {
+		"_postman_id": "1621a135-62c9-47dc-ba1e-449a35b474de",
+		"name": "Ensek",
+		"description": "This collection will cover endpoints for \"buy more fuel\".\n\n- Reset the test data\n- Buy a quantity of each fuel\n- Verify that each order from the previous step is returned in the /orders list with the expected details\n- Confirm how many orders were created before the current date\n- Automate any other validation scenarios that you would consider writing for this API\n    \n\nswagger document: [https://qacandidatetest.ensek.io/](https://qacandidatetest.ensek.io/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7130763",
+		"_collection_link": "https://www.postman.com/gold-comet-813708/workspace/qa-excercise/collection/7130763-1621a135-62c9-47dc-ba1e-449a35b474de?action=share&creator=7130763&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "BUY Energy",
+			"item": [
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "Successfull Login to get Bearer Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string OK\", function () {\r",
+											"    pm.response.to.have.status(\"OK\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is Success\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Success\");\r",
+											"});\r",
+											"\r",
+											"pm.test(pm.variables.replaceIn(\"Access Token generated as below and stored in global variable {{access.token}}\"), function () {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    postman.setGlobalVariable(\"access.token\", jsonData.access_token);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"var reqBodyUN = JSON.parse(request.data);\r",
+											"unvalue = reqBodyUN.username\r",
+											"console.log(unvalue)\r",
+											"tests[\"Verify UserName in json body is of string type\"] = typeof (unvalue) === \"string\" || null;\r",
+											"\r",
+											"\r",
+											"var reqBodyPWD = JSON.parse(request.data);\r",
+											"pwdvalue = reqBodyPWD.password\r",
+											"console.log(pwdvalue)\r",
+											"tests[\"Verify Password in json body is of string type\"] = typeof (pwdvalue) === \"string\" || null;\r",
+											"\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response time is less than 300ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"test\",\r\n  \"password\": \"testing\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/login",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reset Number of Units Required",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string OK\", function () {\r",
+											"    pm.response.to.have.status(\"OK\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is Success\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Success\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/reset",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"reset"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unauthorised whilst Reset Number of Units Required use Invalid bearer token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string UNAUTHORIZED\", function () {\r",
+											"    pm.response.to.have.status(\"UNAUTHORIZED\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is Unauthorized\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Unauthorized\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.tokens}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/reset",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"reset"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unauthorised when invalid login credentials are set",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string UNAUTHORIZED\", function () {\r",
+											"    pm.response.to.have.status(\"UNAUTHORIZED\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is Unauthorized\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Unauthorized\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "testingasdfasdfasdf",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "tester123",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"test1\",\r\n  \"password\": \"testing\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/login",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Bad Request when password is NOT set",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string Bad Request\", function () {\r",
+											"    pm.response.to.have.status(\"BAD REQUEST\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Message is as Bad Request\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Bad Request\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/login",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Energy Type Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string OK\", function () {\r",
+											"    pm.response.to.have.status(\"OK\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Verify energy id for electric type.\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.electric.energy_id).to.eql(3)\r",
+											"\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test(\"Verify price_per_unit for electric type\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.electric.price_per_unit).to.eql(0.47)\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test(\"Verify quantity_of_units for electric type\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.electric.quantity_of_units).to.eql(4322)\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test(\"Verify unit_type for electric type\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.electric.unit_type).to.eql(\"kWh\")\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/energy",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"energy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Previous Order Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string OK\", function () {\r",
+											"    pm.response.to.have.status(\"OK\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Order ID exists in the response : \" + postman.getGlobalVariable(\"order.id\"), function () {\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(postman.getGlobalVariable(\"order.id\"));\r",
+											"\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Verify fuel type.\", function () {\r",
+											"\r",
+											"var orders = JSON.parse(responseBody);\r",
+											"orders.forEach(function (order) {\r",
+											"    if (order.fuel===\"Elec\")\r",
+											"console.log(\"console \" + order.fuel)\r",
+											"\r",
+											"});\r",
+											"});\r",
+											"  "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/orders",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single Previous Order",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/orders/275c192e-8d9c-41cf-89fe-11a176449c59",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"orders",
+										"275c192e-8d9c-41cf-89fe-11a176449c59"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Orders created before the current date",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"let date = new Date();\r",
+											"day = date.getDate();\r",
+											"month = date.getMonth();\r",
+											"year = date.getFullYear();\r",
+											"months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];\r",
+											"var currentdate = day + ' ' + months[month] + ' ' + year;\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"var getdate;\r",
+											"var count = 0;\r",
+											"\r",
+											"_.each(jsonData, (item) => {\r",
+											"    getdate = Date.parse(item.time.substring(5, 16));\r",
+											"    if (getdate < Date.parse(currentdate)) {\r",
+											"        count++;\r",
+											"    }\r",
+											"\r",
+											"});\r",
+											"pm.test(\"Orders created before the current date are: \" + count, () => {\r",
+											"    pm.expect(count).to.be.greaterThan(0);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/orders",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PUT",
+					"item": [
+						{
+							"name": "Buy Energy with valid ID & valid Quantity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string OK\", function () {\r",
+											"    pm.response.to.have.status(\"OK\");\r",
+											"});\r",
+											"\r",
+											"pm.test(pm.variables.replaceIn(\"Order ID is generated\"), function () {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    postman.setGlobalVariable(\"order.id\", jsonData.message.substring(94, 130));\r",
+											"    var orderid = postman.getGlobalVariable(\"order.id\");\r",
+											"    postman.getGlobalVariable(\"order.id\")\r",
+											"\r",
+											"});\r",
+											"\r",
+											"pm.test(pm.variables.replaceIn(\"Order ID is \" + postman.getGlobalVariable(\"order.id\")), function () { });"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/buy/3/100",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"buy",
+										"3",
+										"100"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buy Energy by invalid ID & valid Quantity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string BAD REQUEST\", function () {\r",
+											"    pm.response.to.have.status(\"BAD REQUEST\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Message is bad request\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Bad request\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access.token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{ensek.api.url}}/ENSEK/buy/99/100",
+									"host": [
+										"{{ensek.api.url}}"
+									],
+									"path": [
+										"ENSEK",
+										"buy",
+										"99",
+										"100"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
